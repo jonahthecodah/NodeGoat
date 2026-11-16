@@ -67,8 +67,8 @@ describe("ContributionsHandler.handleContributionsUpdate", function() {
         }
     });
 
-    it("rejects non-integer, negative and out-of-range values", function() {
-        ["1+1", "-1", "2.5", "31", "", "10abc", "0x10", "1e1"].forEach(function(value) {
+    it("rejects non-integer and negative values", function() {
+        ["1+1", "-1", "2.5", "", "10abc", "0x10", "1e1", "1000"].forEach(function(value) {
             var result = submit({
                 preTax: value,
                 afterTax: "0",
@@ -86,6 +86,16 @@ describe("ContributionsHandler.handleContributionsUpdate", function() {
             roth: "0"
         });
         assert.strictEqual(result.rendered.updateError, "Invalid contribution percentages");
+    });
+
+    it("rejects a single value above 30% with the limit message", function() {
+        var result = submit({
+            preTax: "31",
+            afterTax: "0",
+            roth: "0"
+        });
+        assert.strictEqual(result.rendered.updateError, "Contribution percentages cannot exceed 30 %");
+        assert.strictEqual(result.updates.length, 0);
     });
 
     it("rejects totals above 30%", function() {

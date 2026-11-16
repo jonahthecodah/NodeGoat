@@ -5,15 +5,14 @@ const {
 
 const MAX_CONTRIBUTION = 30;
 
-// Accepts only whole-number percentages from 0 to MAX_CONTRIBUTION; returns null otherwise.
+// Accepts only non-negative whole numbers (no code, signs, decimals or exponents); returns null otherwise.
 const parseContribution = value => {
     "use strict";
 
     if (typeof value !== "string" || !/^\d{1,3}$/.test(value.trim())) {
         return null;
     }
-    const parsed = parseInt(value, 10);
-    return parsed <= MAX_CONTRIBUTION ? parsed : null;
+    return parseInt(value, 10);
 };
 
 /* The ContributionsHandler must be constructed with a connected db */
